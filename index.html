@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>りく＆ゆあ 前情報まとめ</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --riku-color: #4FC3F7; /* 水色 */
+    --riku-bg: #E1F5FE;
+    --yua-color: #F06292;  /* ピンク */
+    --yua-bg: #FCE4EC;
+    --common-color: #FFB74D; /* オレンジ */
+    --common-bg: #FFF3E0;
+    --text-color: #444;
+  }
+
+  body {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    background-color: #fff9f0;
+    background-image: radial-gradient(#ddd 15%, transparent 16%), radial-gradient(#ddd 15%, transparent 16%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    padding-bottom: 80px; /* プレーヤー分の余白 */
+  }
+
+  /* --- タイトルデザイン変更エリア Start --- */
+  .header-container {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-top: 20px;
+    animation: bounceInDown 1s;
+  }
+
+  h1 {
+    margin: 0;
+    line-height: 1.1;
+    filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1)); /* 全体に影 */
+  }
+
+  .title-main {
+    font-size: 3.5rem; /* 文字を大きく */
+    font-weight: 800;
+    letter-spacing: 2px;
+    /* 文字の白フチ取り（ステッカー風） */
+    -webkit-text-stroke: 4px #fff;
+    paint-order: stroke fill;
+  }
+
+  .t-riku { color: var(--riku-color); }
+  .t-yua { color: var(--yua-color); }
+  .t-amp { 
+    color: var(--common-color); 
+    font-size: 2rem; 
+    vertical-align: middle;
+    -webkit-text-stroke: 3px #fff;
+  }
+
+  .title-sub {
+    display: inline-block;
+    background: #FFB74D;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 5px 20px;
+    border-radius: 99px;
+    border: 3px solid #fff;
+    transform: rotate(-3deg); /* 少し傾けてポップに */
+    box-shadow: 2px 4px 6px rgba(0,0,0,0.1);
+    margin-top: 5px;
+    position: relative;
+    top: -10px;
+    animation: floatBadge 3s ease-in-out infinite;
+  }
+
+  @keyframes floatBadge {
+    0%, 100% { transform: rotate(-3deg) translateY(0); }
+    50% { transform: rotate(-3deg) translateY(-5px); }
+  }
+
+  /* スマホでのタイトルサイズ調整 */
+  @media (max-width: 600px) {
+    .title-main { font-size: 2.2rem; -webkit-text-stroke: 3px #fff; }
+    .t-amp { font-size: 1.5rem; }
+    .title-sub { font-size: 0.9rem; top: -5px; }
+  }
+  /* --- タイトルデザイン変更エリア End --- */
+
+  /* アニメーション定義 */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounceInDown {
+    from { opacity: 0; transform: translateY(-50px); }
+    60% { opacity: 1; transform: translateY(10px); }
+    80% { transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* カード共通スタイル */
+  section {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: 4px solid transparent;
+    animation: fadeInUp 0.8s ease-out both;
+    position: relative; /* 背景イラスト用 */
+  }
+
+  /* 背景イラストの設定 */
+  section::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    width: 200px;
+    height: 200px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* セクションごとのアニメーション遅延 */
+  .riku-section { animation-delay: 0.2s; }
+  .yua-section { animation-delay: 0.4s; }
+  .common-section { animation-delay: 0.6s; }
+
+  .card-header {
+    padding: 15px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* コンテンツレイアウト */
+  .card-content {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 写真エリア */
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(255,255,255,0.5);
+    flex-basis: 35%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 画像スタイル */
+  .photo-frame {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    background-color: #eee;
+  }
+  
+  .photo-frame:hover {
+    transform: scale(1.05) rotate(2deg);
+  }
+
+  /* テキストリスト */
+  .info-list {
+    padding: 20px;
+    list-style: none;
+    margin: 0;
+    flex: 1;
+  }
+
+  .info-list li {
+    margin-bottom: 12px;
+    padding-left: 1.2em;
+    position: relative;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  
+  section:nth-child(3) .info-list li:nth-child(n) { animation-delay: 0.5s; }
+  section:nth-child(4) .info-list li:nth-child(n) { animation-delay: 0.7s; }
+  section:nth-child(5) .info-list li:nth-child(n) { animation-delay: 0.9s; }
+
+  .info-list li::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* --- りくスタイル --- */
+  .riku-section { border-color: var(--riku-color); }
+  .riku-section .card-header { background: var(--riku-color); }
+  .riku-section .info-list li::before { color: var(--riku-color); }
+  .riku-section .gallery { background: linear-gradient(to right, #fff, var(--riku-bg)); }
+  .riku-section::after {
+    left: -20px;
+    bottom: -20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234FC3F7'%3E%3Cpath d='M12 2.5s-4 4.5-6 11c0 0-1 3 0 5 1 2 4 3 6 3s5-1 6-3c1-2 0-5 0-5-2-6.5-6-11-6-11zm0 15c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z'/%3E%3C/svg%3E");
+    transform: rotate(-15deg);
+  }
+
+  /* --- ゆあスタイル --- */
+  .yua-section { border-color: var(--yua-color); }
+  .yua-section .card-header { background: var(--yua-color); }
+  .yua-section .info-list li::before { color: var(--yua-color); }
+  .yua-section .gallery { background: linear-gradient(to left, #fff, var(--yua-bg)); }
+  .yua-section .card-content { flex-direction: row-reverse; }
+  .yua-section::after {
+    right: -20px;
+    bottom: -20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23F06292'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+    transform: rotate(15deg);
+  }
+
+  /* --- 共通スタイル --- */
+  .common-section { border-color: var(--common-color); }
+  .common-section .card-header { background: var(--common-color); }
+  .common-section .info-list li::before { color: var(--common-color); }
+  .common-section::after {
+    right: 10px;
+    bottom: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFB74D'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
+    width: 150px;
+    height: 150px;
+    transform: rotate(10deg);
+  }
+
+  /* ゲームボタン */
+  .game-container {
+    text-align: center;
+    margin: 40px auto;
+    animation: fadeInUp 1s ease-out 1.8s both;
+  }
+  .game-btn {
+    display: inline-block;
+    background: linear-gradient(to bottom, #81C784, #4CAF50);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 15px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 5px 0 #388E3C, 0 10px 10px rgba(0,0,0,0.1);
+    transition: transform 0.1s, box-shadow 0.1s;
+    border: none;
+    cursor: pointer;
+  }
+  .game-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #388E3C, 0 2px 2px rgba(0,0,0,0.1);
+  }
+  .game-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(to bottom, #A5D6A7, #66BB6A);
+  }
+
+  /* フッタープレーヤー */
+  .music-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    animation: fadeInUp 1s ease-out 2s both;
+  }
+  .music-label {
+    font-size: 0.8rem;
+  }
+  audio {
+    height: 30px;
+  }
+  
+  /* スマホ表示調整 */
+  @media (max-width: 600px) {
+    .card-content {
+      flex-direction: column !important;
+    }
+    .gallery {
+        flex-direction: row;
+        flex-basis: auto;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto;
+    }
+    .photo-frame {
+        width: 30%;
+        min-width: 100px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header-container">
+  <h1>
+    <span class="title-main t-riku">りく</span>
+    <span class="t-amp">＆</span>
+    <span class="title-main t-yua">ゆあ</span>
+  </h1>
+  <div class="title-sub">前情報まとめ</div>
+</div>
+
+<section class="riku-section">
+  <div class="card-header">りく（4歳3ヶ月）</div>
+  
+  <div class="card-content">
+    <ul class="info-list">
+      <li>クリスマスプレゼントはマイクラのおもちゃ。ブロック遊びが好きなので、興味の範囲広げ中</li>
+      <li>幼稚園では人気者（らしい）仲良く遊んでるのはコウくん、サクくん、ミナトくん。担任の先生の名前はユウキ先生</li>
+      <li>この前の運動会では、かけっこ1番</li>
+      <li>以降、足が速いのにハマって今はソニック（青いハリネズミ）が大好き</li>
+      <li>「ソニックモード」で家事とゆあちゃんのお世話を手伝ってくれる</li>
+      <li>ゆあちゃんにお気に入りのおもちゃを「盗まれる」または破壊されて大泣きしてること多々。ただ、基本は好きなので、寝る時と起きてすぐは、わざわざ隣に行って手を握ってる</li>
+      <li>喧嘩はよくするが、基本は兄として我慢してくれており、おもちゃをとられても「どうぞゆあちゃん」という事も最近増えた。どうしても遊びたい時は、代わりのおもちゃを渡してデコイ作戦</li>
+      <li>正月はれみと駅伝を見ながら、青学がどうの、華の二区がうんたらと、2人で盛り上がってる</li>
+      <li>はなくそほじりを最近覚えた。</li>
+      <li>口ぐせ、「おっぱっぺーりー」→意味不明。「おぱんつまんぷぅ！」→意味不明</li>
+      <li>幼稚園のお遊戯会（11月末）出し物は、ダンスと歌。ダンスの『ポップコーン』歌の『雪だるまのチャチャ、ピクニック、ぽかぽかお日様ありがとう』。全体的に全力で挑む。誰よりも大きい声で歌い、普通に踊れるが、（余計な）激しい動きを入れる</li>
+      <li>とにかく負けず嫌い。</li>
+      <li>たまに考え事してる時、一点を見つめている（ハリポタのBGM）</li>
+    </ul>
+
+    <div class="gallery">
+      <img src="riku1.jpg" class="photo-frame" alt="りく1">
+      <img src="riku2.jpg" class="photo-frame" alt="りく2">
+      <img src="riku3.jpg" class="photo-frame" alt="りく3">
+    </div>
+  </div>
+</section>
+
+<section class="yua-section">
+  <div class="card-header">ゆあ（2歳半）</div>
+
+  <div class="card-content">
+    <ul class="info-list">
+      <li>「たぁーく」意味→ありがとう、いただきます、ごちそうさま</li>
+      <li>「あぁーて！」意味→見て！、貸して！</li>
+      <li>「ごめんね」をここ最近はっきり言う</li>
+      <li>こまると「どぉしよぉ」、くさいと「くちゃーい」、おかわりは「かぁーりぃ」、話始めに「あのぉ」</li>
+      <li>大概の言葉は理解している模様。「ゆあ太った？」の両親の会話を気にしてるらしく、最近自主的に食事制限ダイエット中。りくと同じ量食べる時もあるので、多分調整してる</li>
+      <li>赤ちゃんのモノマネが流行っており、「あーはぁーん」言い出したら赤ちゃんの真似で、かまかまって欲しいの合図</li>
+      <li>兄のこと好きすぎて、りくが遊んでるおもちゃを、（それまで自分は別のおもちゃで遊んでいたのに、それをほっぽりだして）盗るもしくは破壊する。ほぼ毎回。りくに取り上げられたら、被害者面して甘えてくる。</li>
+      <li>おそらくりくのことを舎弟と思っており、機嫌が良いとご飯を食べさせて、よしよししてる。機嫌が悪いと、上げるふりをして、自分で食べて口開けて見せびらかす→りくは本気で拗ねる。移動する時は手を繋ぐが、基本ゆあが前で手を引いてる。2人怒られてる時は、ゆあはりくの陰に隠れて、（おそらく）後ろから背中押してる。見てないとこでりくをどついてる（本人はばれてないと思ってる）</li>
+      <li>かわいいねを言いすぎて、「ねぇ！かぁいいーい？」と強要してくる。新しい服も好きで、鏡の前に行って、ファッションチェックする。</li>
+      <li>りくのことは「じぃくぅ」と呼べるようになったが、自分のことはまだ呼ばない（ゆあとは言える）</li>
+      <li>りくのお遊戯会の練習を見て少し踊れる、お気に入りは『プリンであらどーも！』</li>
+      <li>歯はまだ全部生えてない。人生7周目</li>
+    </ul>
+
+    <div class="gallery">
+      <img src="yua1.jpg" class="photo-frame" alt="ゆあ1">
+      <img src="yua2.jpg" class="photo-frame" alt="ゆあ2">
+      <img src="yua3.jpg" class="photo-frame" alt="ゆあ3">
+    </div>
+  </div>
+</section>
+
+<section class="common-section">
+  <div class="card-header">共通項</div>
+
+  <div class="card-content">
+    <ul class="info-list">
+      <li>どっちも呼ぶ方を間違える。りく「ママこれやって、あ間違えたパパこれやって」、ゆあ「まぁまぁ！…ぱぁぱぁ！」</li>
+      <li>ジブリはもののけ姫以外は大体見て覚えてる。りくはポルコ、カーティスが好きで飛行機をよくブロックで作る。ゆあは、トトロ、千と千尋の「ハク」が好き。</li>
+      <li>COWCOWの『あたりまえ体操』を踊れる</li>
+    </ul>
+  </div>
+</section>
+
+<div class="game-container">
+  <a href="https://teikei1049.github.io/spacebuzz/" target="_blank" class="game-btn">▶ りくゲーム　スペースバズ🚀</a>
+</div>
+
+<div class="music-player">
+  <span class="music-label">♪ BGM: 追憶の午後</span>
+  <audio src="./追憶の午後.mp3" controls loop autoplay></audio>
+</div>
+
+</body>
+</html>
