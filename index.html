@@ -25,28 +25,30 @@
     background-image: radial-gradient(#ddd 15%, transparent 16%), radial-gradient(#ddd 15%, transparent 16%);
     background-size: 20px 20px;
     background-position: 0 0, 10px 10px;
-    padding-bottom: 80px; /* プレーヤー分の余白 */
+    /* 以前のpadding-bottomは削除（プレーヤー固定バー削除のため） */
   }
 
-  /* --- タイトルデザイン変更エリア Start --- */
+  /* --- タイトルエリア --- */
   .header-container {
     text-align: center;
-    margin-bottom: 40px;
-    padding-top: 20px;
+    margin-bottom: 20px;
+    padding-top: 40px; /* 少し下に下げる */
     animation: bounceInDown 1s;
+    position: relative;
+    z-index: 10;
   }
 
   h1 {
     margin: 0;
     line-height: 1.1;
-    filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1)); /* 全体に影 */
+    filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1));
+    cursor: default;
   }
 
   .title-main {
-    font-size: 3.5rem; /* 文字を大きく */
+    font-size: 3.5rem;
     font-weight: 800;
     letter-spacing: 2px;
-    /* 文字の白フチ取り（ステッカー風） */
     -webkit-text-stroke: 4px #fff;
     paint-order: stroke fill;
   }
@@ -60,62 +62,76 @@
     -webkit-text-stroke: 3px #fff;
   }
 
+  /* --- クリック誘導パーツ --- */
+  .click-indicator {
+    color: #FF5252;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    animation: bounceArrow 1s infinite;
+    text-shadow: 2px 2px 0 #fff;
+    cursor: pointer;
+  }
+
+  @keyframes bounceArrow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* --- スタートボタン（サブタイトル） --- */
   .title-sub {
     display: inline-block;
     background: #FFB74D;
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    padding: 5px 20px;
+    padding: 10px 30px;
     border-radius: 99px;
     border: 3px solid #fff;
-    transform: rotate(-3deg); /* 少し傾けてポップに */
-    box-shadow: 2px 4px 6px rgba(0,0,0,0.1);
-    margin-top: 5px;
-    position: relative;
-    top: -10px;
-    animation: floatBadge 3s ease-in-out infinite;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    cursor: pointer; /* クリックできる指マーク */
+    /* ここを変更：少し傾ける */
+    transform: rotate(-3deg);
+    transition: transform 0.2s, background 0.2s;
+    user-select: none;
   }
 
-  @keyframes floatBadge {
-    0%, 100% { transform: rotate(-3deg) translateY(0); }
-    50% { transform: rotate(-3deg) translateY(-5px); }
+  .title-sub:hover {
+    /* ホバー時は少し大きくして角度を変える */
+    transform: scale(1.05) rotate(-1deg);
+    background: #FF9800;
+  }
+  
+  .title-sub:active {
+    transform: scale(0.95) rotate(-3deg);
   }
 
-  /* スマホでのタイトルサイズ調整 */
-  @media (max-width: 600px) {
-    .title-main { font-size: 2.2rem; -webkit-text-stroke: 3px #fff; }
-    .t-amp { font-size: 1.5rem; }
-    .title-sub { font-size: 0.9rem; top: -5px; }
-  }
-  /* --- タイトルデザイン変更エリア End --- */
-
-  /* アニメーション定義 */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes bounceInDown {
-    from { opacity: 0; transform: translateY(-50px); }
-    60% { opacity: 1; transform: translateY(10px); }
-    80% { transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+  /* --- メインコンテンツ（初期非表示） --- */
+  #main-content {
+    display: none; /* 最初は消す */
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
-  /* カード共通スタイル */
+  #main-content.show {
+    display: block;
+    opacity: 1;
+  }
+
+
+  /* --- カード共通スタイル --- */
   section {
     max-width: 800px;
-    margin: 0 auto 40px;
+    margin: 40px auto;
     background: #fff;
     border-radius: 24px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     overflow: hidden;
     border: 4px solid transparent;
-    animation: fadeInUp 0.8s ease-out both;
-    position: relative; /* 背景イラスト用 */
+    position: relative;
+    /* JSで表示後にアニメーションさせるため、CSSの初期animationは削除または調整 */
   }
 
-  /* 背景イラストの設定 */
   section::after {
     content: "";
     position: absolute;
@@ -129,11 +145,6 @@
     z-index: 0;
   }
 
-  /* セクションごとのアニメーション遅延 */
-  .riku-section { animation-delay: 0.2s; }
-  .yua-section { animation-delay: 0.4s; }
-  .common-section { animation-delay: 0.6s; }
-
   .card-header {
     padding: 15px;
     text-align: center;
@@ -144,7 +155,6 @@
     z-index: 1;
   }
 
-  /* コンテンツレイアウト */
   .card-content {
     display: flex;
     align-items: flex-start;
@@ -152,7 +162,7 @@
     z-index: 1;
   }
 
-  /* 写真エリア */
+  /* --- 写真エリア --- */
   .gallery {
     display: flex;
     flex-direction: column;
@@ -164,7 +174,6 @@
     align-items: center;
   }
 
-  /* 画像スタイル */
   .photo-frame {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -174,13 +183,14 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     transition: transform 0.3s;
     background-color: #eee;
+    cursor: zoom-in; /* 拡大できることを示す */
   }
   
   .photo-frame:hover {
     transform: scale(1.05) rotate(2deg);
   }
 
-  /* テキストリスト */
+  /* --- テキストリスト --- */
   .info-list {
     padding: 20px;
     list-style: none;
@@ -194,13 +204,7 @@
     position: relative;
     line-height: 1.6;
     font-size: 0.95rem;
-    opacity: 0;
-    animation: fadeInUp 0.5s ease-out forwards;
   }
-  
-  section:nth-child(3) .info-list li:nth-child(n) { animation-delay: 0.5s; }
-  section:nth-child(4) .info-list li:nth-child(n) { animation-delay: 0.7s; }
-  section:nth-child(5) .info-list li:nth-child(n) { animation-delay: 0.9s; }
 
   .info-list li::before {
     content: '●';
@@ -209,7 +213,7 @@
     top: 0;
   }
 
-  /* --- りくスタイル --- */
+  /* 個別スタイル */
   .riku-section { border-color: var(--riku-color); }
   .riku-section .card-header { background: var(--riku-color); }
   .riku-section .info-list li::before { color: var(--riku-color); }
@@ -221,12 +225,11 @@
     transform: rotate(-15deg);
   }
 
-  /* --- ゆあスタイル --- */
   .yua-section { border-color: var(--yua-color); }
   .yua-section .card-header { background: var(--yua-color); }
   .yua-section .info-list li::before { color: var(--yua-color); }
   .yua-section .gallery { background: linear-gradient(to left, #fff, var(--yua-bg)); }
-  .yua-section .card-content { flex-direction: row-reverse; }
+  .yua-section .card-content { flex-direction: row-reverse; } /* デスクトップは画像左 */
   .yua-section::after {
     right: -20px;
     bottom: -20px;
@@ -234,7 +237,6 @@
     transform: rotate(15deg);
   }
 
-  /* --- 共通スタイル --- */
   .common-section { border-color: var(--common-color); }
   .common-section .card-header { background: var(--common-color); }
   .common-section .info-list li::before { color: var(--common-color); }
@@ -251,7 +253,6 @@
   .game-container {
     text-align: center;
     margin: 40px auto;
-    animation: fadeInUp 1s ease-out 1.8s both;
   }
   .game-btn {
     display: inline-block;
@@ -271,52 +272,73 @@
     transform: translateY(4px);
     box-shadow: 0 1px 0 #388E3C, 0 2px 2px rgba(0,0,0,0.1);
   }
-  .game-btn:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(to bottom, #A5D6A7, #66BB6A);
-  }
 
-  /* フッタープレーヤー */
-  .music-player {
+  /* --- ライトボックス（画像全画面表示） --- */
+  .lightbox {
+    display: none; /* 初期非表示 */
     position: fixed;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
-    background: #333;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-    z-index: 100;
-    display: flex;
-    align-items: center;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
     justify-content: center;
-    gap: 15px;
-    animation: fadeInUp 1s ease-out 2s both;
+    align-items: center;
+    cursor: zoom-out;
   }
-  .music-label {
-    font-size: 0.8rem;
+  .lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    animation: zoomIn 0.3s ease;
   }
-  audio {
-    height: 30px;
+
+  @keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
   }
   
-  /* スマホ表示調整 */
+  /* --- スマホ表示調整 (600px以下) --- */
   @media (max-width: 600px) {
+    /* タイトルサイズ調整 */
+    .title-main { font-size: 2.2rem; -webkit-text-stroke: 3px #fff; }
+    .t-amp { font-size: 1.5rem; }
+
+    /* レイアウト調整：写真を上に */
     .card-content {
-      flex-direction: column !important;
+      /* column-reverse にすると、HTMLの下にある要素(gallery)が上にくる */
+      flex-direction: column-reverse !important; 
     }
+
     .gallery {
-        flex-direction: row;
-        flex-basis: auto;
+        flex-direction: row; /* 横並び */
         width: 100%;
         box-sizing: border-box;
-        overflow-x: auto;
+        overflow-x: auto; /* はみ出たらスクロール */
+        padding: 10px;
+        background: transparent; /* 背景透過してスッキリさせる */
     }
+
     .photo-frame {
-        width: 30%;
-        min-width: 100px;
+        width: 32%; /* 3つ並ぶように */
+        min-width: 90px;
     }
+    
+    /* Yuaの背景グラデーション調整（reverse解除時の見た目補正） */
+    .yua-section .gallery {
+        background: linear-gradient(to bottom, #fff, var(--yua-bg));
+    }
+    .riku-section .gallery {
+        background: linear-gradient(to bottom, #fff, var(--riku-bg));
+    }
+  }
+
+  /* アニメーション定義 */
+  @keyframes bounceInDown {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 </head>
@@ -328,84 +350,138 @@
     <span class="t-amp">＆</span>
     <span class="title-main t-yua">ゆあ</span>
   </h1>
-  <div class="title-sub">前情報まとめ</div>
-</div>
-
-<section class="riku-section">
-  <div class="card-header">りく（4歳3ヶ月）</div>
   
-  <div class="card-content">
-    <ul class="info-list">
-      <li>クリスマスプレゼントはマイクラのおもちゃ。ブロック遊びが好きなので、興味の範囲広げ中</li>
-      <li>幼稚園では人気者（らしい）仲良く遊んでるのはコウくん、サクくん、ミナトくん。担任の先生の名前はユウキ先生</li>
-      <li>この前の運動会では、かけっこ1番</li>
-      <li>以降、足が速いのにハマって今はソニック（青いハリネズミ）が大好き</li>
-      <li>「ソニックモード」で家事とゆあちゃんのお世話を手伝ってくれる</li>
-      <li>ゆあちゃんにお気に入りのおもちゃを「盗まれる」または破壊されて大泣きしてること多々。ただ、基本は好きなので、寝る時と起きてすぐは、わざわざ隣に行って手を握ってる</li>
-      <li>喧嘩はよくするが、基本は兄として我慢してくれており、おもちゃをとられても「どうぞゆあちゃん」という事も最近増えた。どうしても遊びたい時は、代わりのおもちゃを渡してデコイ作戦</li>
-      <li>正月はれみと駅伝を見ながら、青学がどうの、華の二区がうんたらと、2人で盛り上がってる</li>
-      <li>はなくそほじりを最近覚えた。</li>
-      <li>口ぐせ、「おっぱっぺーりー」→意味不明。「おぱんつまんぷぅ！」→意味不明</li>
-      <li>幼稚園のお遊戯会（11月末）出し物は、ダンスと歌。ダンスの『ポップコーン』歌の『雪だるまのチャチャ、ピクニック、ぽかぽかお日様ありがとう』。全体的に全力で挑む。誰よりも大きい声で歌い、普通に踊れるが、（余計な）激しい動きを入れる</li>
-      <li>とにかく負けず嫌い。</li>
-      <li>たまに考え事してる時、一点を見つめている（ハリポタのBGM）</li>
-    </ul>
-
-    <div class="gallery">
-      <img src="riku1.jpg" class="photo-frame" alt="りく1">
-      <img src="riku2.jpg" class="photo-frame" alt="りく2">
-      <img src="riku3.jpg" class="photo-frame" alt="りく3">
-    </div>
+  <div id="start-trigger" onclick="startExperience()">
+    <div class="click-indicator" id="click-arrow">👇 Click! 👇</div>
+    <div class="title-sub">まえ情報まとめ</div>
   </div>
-</section>
-
-<section class="yua-section">
-  <div class="card-header">ゆあ（2歳半）</div>
-
-  <div class="card-content">
-    <ul class="info-list">
-      <li>「たぁーく」意味→ありがとう、いただきます、ごちそうさま</li>
-      <li>「あぁーて！」意味→見て！、貸して！</li>
-      <li>「ごめんね」をここ最近はっきり言う</li>
-      <li>こまると「どぉしよぉ」、くさいと「くちゃーい」、おかわりは「かぁーりぃ」、話始めに「あのぉ」</li>
-      <li>大概の言葉は理解している模様。「ゆあ太った？」の両親の会話を気にしてるらしく、最近自主的に食事制限ダイエット中。りくと同じ量食べる時もあるので、多分調整してる</li>
-      <li>赤ちゃんのモノマネが流行っており、「あーはぁーん」言い出したら赤ちゃんの真似で、かまかまって欲しいの合図</li>
-      <li>兄のこと好きすぎて、りくが遊んでるおもちゃを、（それまで自分は別のおもちゃで遊んでいたのに、それをほっぽりだして）盗るもしくは破壊する。ほぼ毎回。りくに取り上げられたら、被害者面して甘えてくる。</li>
-      <li>おそらくりくのことを舎弟と思っており、機嫌が良いとご飯を食べさせて、よしよししてる。機嫌が悪いと、上げるふりをして、自分で食べて口開けて見せびらかす→りくは本気で拗ねる。移動する時は手を繋ぐが、基本ゆあが前で手を引いてる。2人怒られてる時は、ゆあはりくの陰に隠れて、（おそらく）後ろから背中押してる。見てないとこでりくをどついてる（本人はばれてないと思ってる）</li>
-      <li>かわいいねを言いすぎて、「ねぇ！かぁいいーい？」と強要してくる。新しい服も好きで、鏡の前に行って、ファッションチェックする。</li>
-      <li>りくのことは「じぃくぅ」と呼べるようになったが、自分のことはまだ呼ばない（ゆあとは言える）</li>
-      <li>りくのお遊戯会の練習を見て少し踊れる、お気に入りは『プリンであらどーも！』</li>
-      <li>歯はまだ全部生えてない。人生7周目</li>
-    </ul>
-
-    <div class="gallery">
-      <img src="yua1.jpg" class="photo-frame" alt="ゆあ1">
-      <img src="yua2.jpg" class="photo-frame" alt="ゆあ2">
-      <img src="yua3.jpg" class="photo-frame" alt="ゆあ3">
-    </div>
-  </div>
-</section>
-
-<section class="common-section">
-  <div class="card-header">共通項</div>
-
-  <div class="card-content">
-    <ul class="info-list">
-      <li>どっちも呼ぶ方を間違える。りく「ママこれやって、あ間違えたパパこれやって」、ゆあ「まぁまぁ！…ぱぁぱぁ！」</li>
-      <li>ジブリはもののけ姫以外は大体見て覚えてる。りくはポルコ、カーティスが好きで飛行機をよくブロックで作る。ゆあは、トトロ、千と千尋の「ハク」が好き。</li>
-      <li>COWCOWの『あたりまえ体操』を踊れる</li>
-    </ul>
-  </div>
-</section>
-
-<div class="game-container">
-  <a href="https://teikei1049.github.io/spacebuzz/" target="_blank" class="game-btn">▶ りくゲーム　スペースバズ🚀</a>
 </div>
 
-<div class="music-player">
-  <span class="music-label">♪ BGM: 追憶の午後</span>
-  <audio src="./追憶の午後.mp3" controls loop autoplay></audio>
+<audio id="bgm" src="./追憶の午後.mp3" loop></audio>
+
+
+<div id="main-content">
+
+  <section class="riku-section">
+    <div class="card-header">りく（4歳3ヶ月）</div>
+    <div class="card-content">
+      <ul class="info-list">
+        <li>クリスマスプレゼントはマイクラのおもちゃ。ブロック遊びが好きなので、興味の範囲広げ中</li>
+        <li>幼稚園では人気者（らしい）仲良く遊んでるのはコウくん、サクくん、ミナトくん。担任の先生の名前はユウキ先生</li>
+        <li>この前の運動会では、かけっこ1番</li>
+        <li>以降、足が速いのにハマって今はソニック（青いハリネズミ）が大好き</li>
+        <li>「ソニックモード」で家事とゆあちゃんのお世話を手伝ってくれる</li>
+        <li>ゆあちゃんにお気に入りのおもちゃを「盗まれる」または破壊されて大泣きしてること多々。ただ、基本は好きなので、寝る時と起きてすぐは、わざわざ隣に行って手を握ってる</li>
+        <li>喧嘩はよくするが、基本は兄として我慢してくれており、おもちゃをとられても「どうぞゆあちゃん」という事も最近増えた。どうしても遊びたい時は、代わりのおもちゃを渡してデコイ作戦</li>
+        <li>正月はれみと駅伝を見ながら、青学がどうの、華の二区がうんたらと、2人で盛り上がってる</li>
+        <li>はなくそほじりを最近覚えた。</li>
+        <li>口ぐせ、「おっぱっぺーりー」→意味不明。「おぱんつまんぷぅ！」→意味不明</li>
+        <li>幼稚園のお遊戯会（11月末）出し物は、ダンスと歌。ダンスの『ポップコーン』歌の『雪だるまのチャチャ、ピクニック、ぽかぽかお日様ありがとう』。全体的に全力で挑む。誰よりも大きい声で歌い、普通に踊れるが、（余計な）激しい動きを入れる</li>
+        <li>とにかく負けず嫌い。</li>
+        <li>たまに考え事してる時、一点を見つめている（ハリポタのBGM）</li>
+      </ul>
+      <div class="gallery">
+        <img src="riku1.jpg" class="photo-frame" alt="りく1" onclick="openLightbox(this)">
+        <img src="riku2.jpg" class="photo-frame" alt="りく2" onclick="openLightbox(this)">
+        <img src="riku3.jpg" class="photo-frame" alt="りく3" onclick="openLightbox(this)">
+      </div>
+    </div>
+  </section>
+
+  <section class="yua-section">
+    <div class="card-header">ゆあ（2歳半）</div>
+    <div class="card-content">
+      <ul class="info-list">
+        <li>「たぁーく」意味→ありがとう、いただきます、ごちそうさま</li>
+        <li>「あぁーて！」意味→見て！、貸して！</li>
+        <li>「ごめんね」をここ最近はっきり言う</li>
+        <li>こまると「どぉしよぉ」、くさいと「くちゃーい」、おかわりは「かぁーりぃ」、話始めに「あのぉ」</li>
+        <li>大概の言葉は理解している模様。「ゆあ太った？」の両親の会話を気にしてるらしく、最近自主的に食事制限ダイエット中。りくと同じ量食べる時もあるので、多分調整してる</li>
+        <li>赤ちゃんのモノマネが流行っており、「あーはぁーん」言い出したら赤ちゃんの真似で、かまかまって欲しいの合図</li>
+        <li>兄のこと好きすぎて、りくが遊んでるおもちゃを、（それまで自分は別のおもちゃで遊んでいたのに、それをほっぽりだして）盗るもしくは破壊する。ほぼ毎回。りくに取り上げられたら、被害者面して甘えてくる。</li>
+        <li>おそらくりくのことを舎弟と思っており、機嫌が良いとご飯を食べさせて、よしよししてる。機嫌が悪いと、上げるふりをして、自分で食べて口開けて見せびらかす→りくは本気で拗ねる。移動する時は手を繋ぐが、基本ゆあが前で手を引いてる。2人怒られてる時は、ゆあはりくの陰に隠れて、（おそらく）後ろから背中押してる。見てないとこでりくをどついてる（本人はばれてないと思ってる）</li>
+        <li>かわいいねを言いすぎて、「ねぇ！かぁいいーい？」と強要してくる。新しい服も好きで、鏡の前に行って、ファッションチェックする。</li>
+        <li>りくのことは「じぃくぅ」と呼べるようになったが、自分のことはまだ呼ばない（ゆあとは言える）</li>
+        <li>りくのお遊戯会の練習を見て少し踊れる、お気に入りは『プリンであらどーも！』</li>
+        <li>歯はまだ全部生えてない。人生7周目</li>
+      </ul>
+      <div class="gallery">
+        <img src="yua1.jpg" class="photo-frame" alt="ゆあ1" onclick="openLightbox(this)">
+        <img src="yua2.jpg" class="photo-frame" alt="ゆあ2" onclick="openLightbox(this)">
+        <img src="yua3.jpg" class="photo-frame" alt="ゆあ3" onclick="openLightbox(this)">
+      </div>
+    </div>
+  </section>
+
+  <section class="common-section">
+    <div class="card-header">共通項</div>
+    <div class="card-content">
+      <ul class="info-list">
+        <li>どっちも呼ぶ方を間違える。りく「ママこれやって、あ間違えたパパこれやって」、ゆあ「まぁまぁ！…ぱぁぱぁ！」</li>
+        <li>ジブリはもののけ姫以外は大体見て覚えてる。りくはポルコ、カーティスが好きで飛行機をよくブロックで作る。ゆあは、トトロ、千と千尋の「ハク」が好き。</li>
+        <li>COWCOWの『あたりまえ体操』を踊れる</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="game-container">
+    <a href="https://teikei1049.github.io/spacebuzz/" target="_blank" class="game-btn">▶ りくゲーム　スペースバズ🚀</a>
+  </div>
+
 </div>
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="拡大画像">
+</div>
+
+<script>
+  // まえ情報まとめをクリックした時の動作
+  function startExperience() {
+    // 1. 音楽再生
+    const audio = document.getElementById('bgm');
+    audio.play().catch(function(error) {
+      console.log("Audio play failed (browser restriction maybe): " + error);
+    });
+
+    // 2. Click矢印を消す
+    const arrow = document.getElementById('click-arrow');
+    if(arrow) arrow.style.display = 'none';
+
+    // 3. コンテンツを表示する
+    const content = document.getElementById('main-content');
+    content.style.display = 'block';
+    
+    // 少し遅れてopacityを1にしてふわっと表示
+    setTimeout(() => {
+      content.classList.add('show');
+      // 自動スクロール（少し下に）
+      const firstSection = document.querySelector('section');
+      if(firstSection) {
+        firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+    
+    // トリガー（ボタン）自体のカーソルなどを変更
+    const trigger = document.getElementById('start-trigger');
+    trigger.onclick = null; // クリックイベント削除
+    document.querySelector('.title-sub').style.cursor = 'default';
+  }
+
+  // 画像をクリックして拡大表示
+  function openLightbox(imgElement) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    
+    lightboxImg.src = imgElement.src; // クリックした画像のパスを渡す
+    lightbox.style.display = 'flex';
+  }
+
+  // ライトボックスを閉じる
+  function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.style.display = 'none';
+  }
+</script>
 
 </body>
 </html>
